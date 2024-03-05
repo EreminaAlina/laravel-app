@@ -9,10 +9,13 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('/todos', [TodoController::class, 'index']);
-Route::post('/todos', [TodoController::class, 'store']);
-Route::get('/todos/{id}', [TodoController::class, 'show']);
-Route::put('/todos/{id}', [TodoController::class, 'update']);
-Route::delete('/todos/{id}', [TodoController::class, 'remove']);
+Route::prefix('todos')->group(function(){
+    Route::get('/', [TodoController::class, 'index']);
+    Route::post('/', [TodoController::class, 'store']);
+    Route::get('/{todo:uuid}', [TodoController::class, 'show']);
+    Route::put('/{todo:uuid}', [TodoController::class, 'update']);
+    Route::delete('/{todo:uuid}', [TodoController::class, 'remove']);
+});
 
-Route::post('/users', [UserController::class, 'createUser']);
+
+//Route::post('/users', [UserController::class, 'createUser']);

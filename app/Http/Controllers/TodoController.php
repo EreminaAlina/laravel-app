@@ -2,49 +2,36 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\TodoRequest;
 use App\Models\Todo;
-use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 
 class TodoController extends Controller
 {
-
-    public function index()
+    public function index(): JsonResponse
     {
-        $todos = Todo::all();
-        return response()->json($todos);
+        return response()->json(Todo::all());
     }
 
-    public function store(Request $request)
+    public function store(TodoRequest $request): JsonResponse
     {
-        $validatedData = $request->validate([
-            'text' => 'required|string',
-        ]);
-
-        $todo = Todo::create($validatedData);
-
+        $todo = Todo::createTask($request);
         return response()->json($todo, 201);
     }
 
-    public function show(Todo $id)
+    public function show(Todo $id): JsonResponse
     {
         return response()->json(Todo::where('id', $id));
     }
 
-    public function update(Request $request, $id)
+    public function update(TodoRequest $request, $id): JsonResponse
     {
-        $validatedData = $request->validate([
-            'text' => 'required|string',
-        ]);
-
-        $todo = Todo::where('id', $id)->update($validatedData);
-
-        return response()->json($todo, 200);
+        return response()->json(Todo::updateTask($request, $id));
     }
 
-    public function remove(Todo $id)
+    public function remove(Todo $id): JsonResponse
     {
-        Todo::where('id', $id)->delete();
-
+        Todo::deleteTask($id);
         return response()->json(null, 204);
     }
 }
